@@ -1,0 +1,49 @@
+{
+    "author": "Demo Company",
+    "dependencies": {},
+    "keywords": [],
+    "name": "btc_watch",
+    "pebble": {
+        "displayName": "BTC_WATCH",
+        "enableMultiJS": true,
+        "messageKeys": [
+            "Ccy_1_last",
+            "Ccy_1_volume",
+            "Ccy_2_last",
+            "Ccy_2_volume",
+            "Ccy_3_last",
+            "Ccy_3_volume",
+            "Ccy_4_last",
+            "Ccy_4_volume",
+            "Ccy_5_last",
+            "Ccy_5_volume"
+        ],
+        "projectType": "native",
+        "resources": {
+            "media": [
+                {
+                    "file": "images/bt-icon16_w.png",
+                    "name": "IMAGE_BT_ICON",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/btc_watch.png",
+                    "menuIcon": true,
+                    "name": "MENU_IMAGE",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                }
+            ]
+        },
+        "sdkVersion": "3",
+        "targetPlatforms": [
+            "basalt"
+        ],
+        "uuid": "f1d5451e-60dd-41d6-aa82-b5433953e480",
+        "watchapp": {
+            "watchface": true
+        }
+    },
+    "version": "1.1.0"
+}
