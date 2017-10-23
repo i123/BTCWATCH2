@@ -2,9 +2,9 @@
     "author": "Demo Company",
     "dependencies": {},
     "keywords": [],
-    "name": "btc_watch",
+    "name": "btc_watch2",
     "pebble": {
-        "displayName": "BTC_WATCH",
+        "displayName": "BTC_WATCH2",
         "enableMultiJS": true,
         "messageKeys": [
             "Ccy_1_last",

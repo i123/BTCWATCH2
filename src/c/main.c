@@ -62,6 +62,11 @@ static void bluetooth_callback(bool connected) {
   }
 }
 
+static void accel_tap_handler(AccelAxisType axis, int32_t direction) {
+  // A tap event occured
+
+}
+
 static void battery_callback(BatteryChargeState state) {
   // Record the new battery level
   s_battery_level = state.charge_percent;
@@ -349,6 +354,29 @@ static void app_unobstructed_change(AnimationProgress progress, void *context) {
   update_ui();
 }
 
+static void accel_data_handler(AccelData *data, uint32_t num_samples) {
+  // Read sample 0's x, y, and z values
+  int16_t x = data[0].x;
+  int16_t y = data[0].y;
+  int16_t z = data[0].z;
+
+  // Determine if the sample occured during vibration, and when it occured
+  bool did_vibrate = data[0].did_vibrate;
+  uint64_t timestamp = data[0].timestamp;
+
+  if(!did_vibrate) {
+		if(abs(x) + abs(y) + abs(z) > 2600) {
+	    // Print it out
+  	  APP_LOG(APP_LOG_LEVEL_INFO, "t: %llu, x: %d, y: %d, z: %d",
+                                                          timestamp, abs(x), abs(y), abs(z));
+		  update_ccy();
+		}
+	} else {
+    // Discard with a warning
+    // APP_LOG(APP_LOG_LEVEL_WARNING, "Vibration occured during collection");
+  }
+}
+
 static void main_window_load(Window *window) {
   window_layer = window_get_root_layer(window);
 
@@ -381,6 +409,10 @@ static void main_window_load(Window *window) {
   
   // Show the correct state of the BT connection from the start
   bluetooth_callback(connection_service_peek_pebble_app_connection());
+	
+	uint32_t num_samples = 10;  // Number of samples per batch/callback
+  // Subscribe to batched data events
+  accel_data_service_subscribe(num_samples, accel_data_handler);
 }
 
 static void main_window_unload(Window *window) {
@@ -389,7 +421,8 @@ static void main_window_unload(Window *window) {
   gbitmap_destroy(s_bt_icon_bitmap);
   bitmap_layer_destroy(s_bt_icon_layer);
   unobstructed_area_service_unsubscribe();
-
+  // Unsubscribe from tap events
+  accel_tap_service_unsubscribe();
   // Clean up the unused UI elenents
   destroy_ui();
 }
@@ -399,9 +432,9 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
 	
 	uint8_t t_update = 1;
 	if(tick_time->tm_hour < 6 && tick_time->tm_hour > 23){
-		t_update = 15;
+		t_update = 60;
 	}else{
-		t_update = 10;
+		t_update = 30;
 	}
 	// Get ccy update every t_update minutes
 	if(tick_time->tm_min % t_update == 0) {
@@ -411,7 +444,7 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
 
 static void inbox_received_callback(DictionaryIterator *iterator, void *context) {
   // Store incoming information
-  static char ccy1_value_buffer[8];
+  static char ccy1_value_buffer[32];
   //static char change_buffer[32];
   static char ccy1_title_buffer[32];
 	static char ccy2_title_buffer[32];
@@ -438,7 +471,7 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
   // If Polo data is available, use it
   if(last1_tuple) {
 		// snprintf(change_buffer, sizeof(change_buffer), "USDT, %s", change_tuple->value->cstring);
-		snprintf(ccy1_title_buffer, sizeof(ccy1_title_buffer), "USDBTC %s", vol_1_tuple->value->cstring);
+		snprintf(ccy1_title_buffer, sizeof(ccy1_title_buffer), "USDBTC, %s", vol_1_tuple->value->cstring);
 		snprintf(ccy1_value_buffer, sizeof(ccy1_value_buffer), "%s", last1_tuple->value->cstring);
     // Assemble full string and display
 		text_layer_set_text(s_ccytitle_layer, ccy1_title_buffer);
@@ -511,6 +544,9 @@ static void init() {
   connection_service_subscribe((ConnectionHandlers) {
     .pebble_app_connection_handler = bluetooth_callback
   });
+	
+	// Subscribe to tap events
+	accel_tap_service_subscribe(accel_tap_handler);
 }
 
 static void deinit() {
