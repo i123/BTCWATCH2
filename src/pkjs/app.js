@@ -18,16 +18,15 @@ function getCcyPolo() {
       var json = JSON.parse(responseText);
       var ccy1_last = floatFormat(json.USDT_BTC.last,2);
 			var ccy1_volume= volFormat(json.USDT_BTC.baseVolume);
-      var ccy2_last = floatFormat(json.BTC_LTC.last,5);
-			var ccy2_volume=  volFormat(json.BTC_LTC.baseVolume);
-			var ccy3_last = floatFormat(json.BTC_XMR.last,5);
-      var ccy3_volume= ""+ volFormat(json.BTC_XMR.baseVolume);
-			//var ccy3_volume= volFormat(json.BTC_XMR.baseVolume);
-      var ccy4_last = floatFormat(json.USDT_XMR.last,2);
+      var ccy2_last = floatFormat(json.USDT_BCH.last,2);
+			var ccy2_volume=  volFormat(json.USDT_BCH.baseVolume);
+			var ccy3_last = floatFormat(json.USDT_LTC.last,2);
+      var ccy3_volume= volFormat(json.USDT_LTC.baseVolume);
+			var ccy4_last = floatFormat(json.USDT_XMR.last,2);
 			var ccy4_volume= volFormat(json.USDT_XMR.baseVolume);
-      var ccy5_last = floatFormat(json.USDT_BCH.last,2);
-			var ccy5_volume= volFormat(json.USDT_BCH.baseVolume);
-      console.log("USDT_BTC is " + ccy5_volume);
+      var ccy5_last = floatFormat(json.BTC_XMR.last,5);
+			var ccy5_volume=  volFormat(json.BTC_XMR.baseVolume);
+      // console.log("USDT_BTC is " + ccy5_volume);
 			
       // Assemble dictionary using our keys
       var dictionary = {

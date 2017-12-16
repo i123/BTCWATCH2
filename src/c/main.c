@@ -365,10 +365,11 @@ static void accel_data_handler(AccelData *data, uint32_t num_samples) {
   uint64_t timestamp = data[0].timestamp;
 
   if(!did_vibrate) {
-		if(abs(x) + abs(y) + abs(z) > 2600) {
+		//APP_LOG(APP_LOG_LEVEL_INFO, "t: %llu, x: %d, y: %d, z: %d",
+    //                                                      timestamp, abs(x), abs(y), abs(z));
+		if(abs(x)< 400 && ( abs(y) + abs(z)) > 2400) {
 	    // Print it out
-  	  APP_LOG(APP_LOG_LEVEL_INFO, "t: %llu, x: %d, y: %d, z: %d",
-                                                          timestamp, abs(x), abs(y), abs(z));
+  	  // APP_LOG(APP_LOG_LEVEL_INFO, "t: %llu, x: %d, y: %d, z: %d", timestamp, abs(x), abs(y), abs(z));
 		  update_ccy();
 		}
 	} else {
@@ -477,12 +478,12 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
 		text_layer_set_text(s_ccytitle_layer, ccy1_title_buffer);
     text_layer_set_text(s_ccyvalue_layer, ccy1_value_buffer);
 		
-		snprintf(ccy2_title_buffer, sizeof(ccy2_title_buffer), "BTCLTC, %s", vol_2_tuple->value->cstring);
+		snprintf(ccy2_title_buffer, sizeof(ccy2_title_buffer), "USDBCH, %s", vol_2_tuple->value->cstring);
 		snprintf(ccy2_value_buffer, sizeof(ccy2_value_buffer), "%s", last2_tuple->value->cstring);
 		text_layer_set_text(s_ccytitle2_layer, ccy2_title_buffer);
 		text_layer_set_text(s_ccyvalue2_layer, ccy2_value_buffer);
   
-		snprintf(ccy3_title_buffer, sizeof(ccy3_title_buffer), "BTCXMR, %s", vol_3_tuple->value->cstring);
+		snprintf(ccy3_title_buffer, sizeof(ccy3_title_buffer), "USDLTC, %s", vol_3_tuple->value->cstring);
 		snprintf(ccy3_value_buffer, sizeof(ccy3_value_buffer), "%s", last3_tuple->value->cstring);
 		text_layer_set_text(s_ccytitle3_layer, ccy3_title_buffer);
 		text_layer_set_text(s_ccyvalue3_layer, ccy3_value_buffer);
@@ -492,7 +493,7 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
 		text_layer_set_text(s_ccytitle4_layer, ccy4_title_buffer);
 		text_layer_set_text(s_ccyvalue4_layer, ccy4_value_buffer);
 
-		snprintf(ccy5_title_buffer, sizeof(ccy5_title_buffer), "USDBCH, %s", vol_5_tuple->value->cstring);
+		snprintf(ccy5_title_buffer, sizeof(ccy5_title_buffer), "BTCXMR, %s", vol_5_tuple->value->cstring);
 		snprintf(ccy5_value_buffer, sizeof(ccy5_value_buffer), "%s", last5_tuple->value->cstring);
 		text_layer_set_text(s_ccytitle5_layer, ccy5_title_buffer);
 		text_layer_set_text(s_ccyvalue5_layer, ccy5_value_buffer);		
